@@ -1,0 +1,3 @@
+[submodule "trello-api-service"]
+	path = trello-api-service
+	url = git@github.com:DilwoarH/trello-api-service.git
