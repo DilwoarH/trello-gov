@@ -8,14 +8,16 @@ class TrelloApiService
         return this.trello.setKey(key);
     }
 
-    authorize(appName = "Trello service", success_callback = null, error_callback = null) {
+    authorize(
+        appName = "Trello service",
+        scope = { read: true, write: false },
+        success_callback = null, 
+        error_callback = null
+    ) {
         return this.trello.authorize({
             type: 'popup',
             name: appName,
-            scope: {
-                read: 'true',
-                write: 'true'
-            },
+            scope: scope,
             expiration: 'never',
             success: success_callback ? success_callback : this.authenticationSuccess,
             error: error_callback ? error_callback : this.authenticationFailure
@@ -48,8 +50,17 @@ class TrelloApiService
      * Return Promise
      */
     getBoard( id = null ) {
-        if (!name) return { "error": "No id given." };
-        return this.trello.get(id);
+        if (!id) return { "error": "No id given." };
+        return this.trello.boards.get(id);
+    }
+
+    /* 
+     * Get All Board
+     * Return Promise
+     */
+    getAllBoard( user_id = null ) {
+        if (!user_id) return { "error": "No user_id given." };
+        return this.trello.get(`/members/${user_id}/boards`);
     }
 
     /* 
@@ -58,7 +69,25 @@ class TrelloApiService
      */
     getListsForBoard( id = null ) {
         if (!id) return { "error": "No id given." };
-        return this.trello.get(`${id}/lists`);
+        return this.trello.boards.get(`${id}/lists`);
+    }
+
+    /* 
+     * Get Labels for Board
+     * Return Promise
+     */
+    getLabelsForBoard( id = null ) {
+        if (!id) return { "error": "No id given." };
+        return this.trello.boards.get(`${id}/labels`);
+    }
+
+    /* 
+     * Get Cards For List
+     * Return Promise
+     */
+    getCardsForList( id = null ) {
+        if (!id) return { "error": "No id given." };
+        return this.trello.lists.get(`${id}/cards`);
     }
 
     /* 
