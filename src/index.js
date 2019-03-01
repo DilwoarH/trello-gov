@@ -55,7 +55,7 @@ class index {
   }
 
   auth() {
-    return this.trelloService.authorize("Objectives spreadsheet");
+    return this.trelloService.authorize("TrelloGOV");
   }
 
   initBoardSelection() {

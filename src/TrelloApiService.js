@@ -15,7 +15,7 @@ class TrelloApiService
         error_callback = null
     ) {
         return this.trello.authorize({
-            type: 'popup',
+            type: 'redirect',
             name: appName,
             scope: scope,
             expiration: 'never',
