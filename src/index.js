@@ -1,14 +1,52 @@
 class index {
   constructor() {
     this.trelloService = new TrelloApiService();
+
+    if ( !this.checkTrelloConfig() ) {
+      return this.displayTrelloConfig();
+    }
+
+
     this.setAPIkey();
     this.auth();
     if ((this.cacheData = this.getCache())) {
+      this.initBoardSelection();
       this.displayBoard();
     } else {
       this.initBoardSelection();
       this.cacheData = null;
     }
+  }
+
+  checkTrelloConfig() {
+    var key = window.localStorage.getItem('trello_api_key');
+    var user_id = window.localStorage.getItem('trello_user_id');
+    return key && user_id;
+  }
+
+  setTrelloConfig(trello_user_id, trello_api_key) {
+    window.localStorage.setItem('trello_user_id', trello_user_id);
+    window.localStorage.setItem('trello_api_key', trello_api_key);
+  }
+
+  displayTrelloConfig() {
+    var _this = this;
+    $('#update-trello-config').on('click', function(){
+      $(this).attr('disabled', 'disabled');
+
+      var trello_user_id = $('#trello-user-id').val();
+      var trello_api_key = $('#trello-api-key').val();
+
+      if (trello_user_id.length && trello_api_key.length){
+        _this.setTrelloConfig(trello_user_id, trello_api_key);
+        window.location.reload();
+      }
+      else {
+        alert('Error: Config is invalid.');
+        $(this).removeAttr('disabled');
+      }
+    });
+    return $('.trello-setup').show();
   }
 
   setAPIkey() {
@@ -21,6 +59,7 @@ class index {
   }
 
   initBoardSelection() {
+    var data = this.getCache();
     var $boardSelectionWrapper = $('.board-selection');
     var $boardSelectElement = $('#board');
 
@@ -31,6 +70,10 @@ class index {
       boards.forEach(board => {
         $boardSelectElement.append(`<option value='${board.id}'>${board.name}</option>`);
       });
+
+      if (data && data.board) {
+        $boardSelectElement.val(data.board.id);
+      }
 
       $boardSelectionWrapper.show();
     });
@@ -83,8 +126,6 @@ class index {
 
     Promise.all(promises)
     .then(function(values) {
-      console.log(values);
-      console.log(_this.cacheData);
       return Promise.resolve(values[1]);
     })
     .then(function(lists){
@@ -120,10 +161,17 @@ class index {
   displayBoard() {
     var data = this.getCache();
     var $elm = $('#main-content');
-    $elm.find('.board-name').text(data.board.name);
+    var md_converter = new showdown.Converter()
+    
+    $elm.html(`
+      <span class="govuk-caption-xl">Trello Board</span>
+      <h1 class="govuk-heading-xl board-name">${ data.board.name }</h1>
+    `);
 
     var tabs = '';
     var tab_content = '';
+
+
 
     data.lists.forEach(list => {
       var cards = '';
@@ -140,7 +188,18 @@ class index {
 
         cards += `
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell">${card.name}</td>
+          <td class="govuk-table__cell">
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  ${card.name}
+                </span>
+              </summary>
+              <div class="govuk-details__text">
+                ${md_converter.makeHtml(card.desc)}
+              </div>
+            </details>
+          </td>
           <td class="govuk-table__cell">${labels}</td>
           <td class="govuk-table__cell"><a href="${card.url}" target="_blank">View</a></td>
         </tr>
@@ -186,7 +245,7 @@ class index {
 
       ${tab_content}
     </div>
-    `);
+    `).show();
   }
 }
 

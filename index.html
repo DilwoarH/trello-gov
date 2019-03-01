@@ -1,7 +1,7 @@
 <!DOCTYPE />
 <html>
 <head>
-  <title>Objectives</title>
+  <title>TrelloGOV - github.com/DilwoarH/trello-gov</title>
   <link rel="stylesheet" href="./src/index.css">
   <link rel="stylesheet" href="./lib/govuk-frontend-2.7.0.min.css">
 </head>
@@ -21,7 +21,7 @@
               <image src="/assets/images/govuk-logotype-crown.png" class="govuk-header__logotype-crown-fallback-image"></image>
             </svg>
             <span class="govuk-header__logotype-text">
-              Objectives
+              TrelloGOV
             </span>
           </span>
         </a>
@@ -29,21 +29,61 @@
     </div>
   </header>
 
+  <div class="govuk-width-container trello-setup">
+    <div class="govuk-grid-row">
+      <div class="govuk-form-group govuk-grid-column-two-thirds">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+            <h1 class="govuk-fieldset__heading">
+              Ops! Looks like your configuration needs to be set.
+            </h1>
+          </legend>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="trello-user-id">
+              Trello user ID
+            </label>
+            <span class="govuk-hint">
+                The ID you use to login.
+            </span>
+            <input class="govuk-input" id="trello-user-id" type="text" required>
+          </div>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="trello-api-key">
+              Trello API key
+            </label>
+            <span class="govuk-hint">
+                <a href="https://trello.com/login?returnUrl=/app-key" target="_blank">https://trello.com/app-key</a>
+            </span>
+            <input class="govuk-input" id="trello-api-key" type="text" required>
+          </div>
+          <button id="update-trello-config" class="govuk-button govuk-!-margin-top-6">
+            Save and continue
+          </button>
+        </fieldset>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+          <h3 class="govuk-heading-m">Trello API key</h3>
+          <p class="govuk-body">
+            You can get your API key by logging into Trello and visiting <a href="https://trello.com/login?returnUrl=/app-key" target="_blank">https://trello.com/app-key</a>.</p>
+        </div>
+    </div>
+  </div>
+
   <div class="govuk-width-container board-selection">
     <div class="govuk-form-group">
       <label class="govuk-label" for="sort">
-        Select your Objectives board
+        Select your board
       </label>
       <select class="govuk-select" id="board" name="board">
+        <option value="">Select your board</option>
       </select>
     </div>
   </div>
 
-  <div id="main-content" class="govuk-width-container">
-      <span class="govuk-caption-xl">SMART objectives tracker</span>
-      <h1 class="govuk-heading-xl board-name">{{ board-name }}</h1>
-  </div>
+  <div id="main-content" class="govuk-width-container"></div>
 
+  <script src="./lib/showdown.min.js"></script>
   <script src="./lib/govuk-frontend-2.7.0.min.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
   <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
