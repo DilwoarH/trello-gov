@@ -196,7 +196,7 @@ class index {
                 </span>
               </summary>
               <div class="govuk-details__text">
-                ${md_converter.makeHtml(card.desc)}
+                ${card.desc ? md_converter.makeHtml(card.desc) : "No additional information found."}
               </div>
             </details>
           </td>
